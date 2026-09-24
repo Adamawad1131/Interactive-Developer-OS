@@ -11,14 +11,12 @@
   <!-- Interactive Background Canvas -->
   <canvas id="bg-canvas"></canvas>
 
-  <!-- Desktop Environment -->
   <div class="desktop">
     <!-- Header Taskbar -->
     <div class="taskbar">
       <div class="brand">⚡ CYBER_OS v2.0</div>
       <div class="status-widgets">
         <span id="time-widget">00:00:00</span>
-        <button id="audio-toggle" class="chip-btn">🔊 Audio</button>
       </div>
     </div>
 
@@ -28,13 +26,13 @@
         <div class="icon-box cyan">💻</div>
         <span>Terminal</span>
       </div>
+      <div class="app-icon" onclick="openWindow('pixel-window')">
+        <div class="icon-box pink">🎨</div>
+        <span>Pixel Studio</span>
+      </div>
       <div class="app-icon" onclick="openWindow('projects-window')">
         <div class="icon-box purple">🚀</div>
         <span>Projects</span>
-      </div>
-      <div class="app-icon" onclick="openWindow('canvas-window')">
-        <div class="icon-box pink">🎨</div>
-        <span>Particle Art</span>
       </div>
       <div class="app-icon" onclick="openWindow('about-window')">
         <div class="icon-box green">👤</div>
@@ -51,77 +49,68 @@
       <div class="window-body terminal-body">
         <div id="terminal-output">
           <p class="term-text green">System initialized successfully.</p>
-          <p class="term-text">Type <span class="cyan">'help'</span> to see available commands.</p>
+          <p class="term-text">Type <span class="cyan">'about'</span> or <span class="cyan">'help'</span> to interact.</p>
         </div>
         <div class="command-line">
-          <span class="prompt">visitor@github:~$</span>
+          <span class="prompt">adam@cyber-os:~$</span>
           <input type="text" id="terminal-input" autofocus autocomplete="off">
         </div>
       </div>
     </div>
 
-    <!-- WINDOW 2: Interactive Projects Showcase -->
+    <!-- WINDOW 2: REAL Pixel Art Design Studio -->
+    <div id="pixel-window" class="window window-glass hide">
+      <div class="window-header">
+        <span class="window-title">Pixel Art Studio</span>
+        <button class="close-btn" onclick="closeWindow('pixel-window')">✕</button>
+      </div>
+      <div class="window-body">
+        <div class="pixel-controls">
+          <input type="color" id="pixel-color" value="#38bdf8">
+          <button id="eraser-btn" class="chip-btn" onclick="toggleEraser()">Eraser: OFF</button>
+          <button class="chip-btn danger" onclick="clearPixelGrid()">Clear</button>
+          <button class="btn-action" onclick="exportPixelArt()">Export PNG</button>
+        </div>
+        <div class="pixel-canvas-wrapper">
+          <div id="pixel-grid" class="pixel-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WINDOW 3: Projects Showcase -->
     <div id="projects-window" class="window window-glass hide">
       <div class="window-header">
-        <span class="window-title">Featured Projects Gallery</span>
+        <span class="window-title">Featured Apps</span>
         <button class="close-btn" onclick="closeWindow('projects-window')">✕</button>
       </div>
       <div class="window-body">
         <div class="projects-grid">
           <div class="project-card">
-            <div class="card-tag">Web App</div>
+            <div class="card-tag">Design App</div>
             <h3>Pixel Art Studio</h3>
-            <p>Interactive browser-based pixel drawing and PNG exporter.</p>
-            <button class="btn-action">Launch App ↗</button>
+            <p>Draw pixel art directly inside your browser window.</p>
+            <button class="btn-action" onclick="openWindow('pixel-window')">Launch Now ↗</button>
           </div>
           <div class="project-card">
-            <div class="card-tag">Game</div>
-            <h3>Mastermind Quiz OS</h3>
-            <p>Sleek glassmorphism quiz app with audio synthesized FX.</p>
-            <button class="btn-action">Launch App ↗</button>
-          </div>
-          <div class="project-card">
-            <div class="card-tag">Security</div>
-            <h3>Malware Signature Hash Tool</h3>
-            <p>File scanner and threat detector concept built in Python.</p>
-            <button class="btn-action">View Code ↗</button>
+            <div class="card-tag">CLI Tool</div>
+            <h3>Cyber OS Terminal</h3>
+            <p>Interactive command line with custom developer information.</p>
+            <button class="btn-action" onclick="openWindow('terminal-window')">Launch Terminal ↗</button>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- WINDOW 3: Interactive Canvas Controls -->
-    <div id="canvas-window" class="window window-glass hide">
-      <div class="window-header">
-        <span class="window-title">Interactive Particle Sandbox</span>
-        <button class="close-btn" onclick="closeWindow('canvas-window')">✕</button>
-      </div>
-      <div class="window-body">
-        <p>Move your mouse across the screen to distort the quantum grid network!</p>
-        <div class="control-group">
-          <label>Particle Count</label>
-          <input type="range" id="particle-slider" min="30" max="200" value="80">
-        </div>
-        <button id="explode-btn" class="btn-action full-width">Trigger Explosion Wave 💥</button>
       </div>
     </div>
 
     <!-- WINDOW 4: About Me -->
     <div id="about-window" class="window window-glass hide">
       <div class="window-header">
-        <span class="window-title">Developer Profile</span>
+        <span class="window-title">Developer Info</span>
         <button class="close-btn" onclick="closeWindow('about-window')">✕</button>
       </div>
       <div class="window-body center-text">
         <div class="avatar-glow">⚡</div>
-        <h2>Creative Web Developer</h2>
-        <p class="subtitle">Building high-performance, interactive digital experiences.</p>
-        <div class="skill-chips">
-          <span>JavaScript (ES6+)</span>
-          <span>HTML5/CSS3</span>
-          <span>UI/UX Architecture</span>
-          <span>Git & GitHub</span>
-        </div>
+        <h2>Adam Awad</h2>
+        <p class="subtitle">Adam awad the developer of the app is very happy to be a customer in our web os</p>
       </div>
     </div>
 
