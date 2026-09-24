@@ -1,4 +1,4 @@
-// Clock Widget
+// Clock
 setInterval(() => {
   const now = new Date();
   document.getElementById('time-widget').textContent = now.toLocaleTimeString();
@@ -15,7 +15,7 @@ function closeWindow(id) {
   document.getElementById(id).classList.add('hide');
 }
 
-// Interactive Terminal Logic
+// Terminal Logic with Custom Adam Awad Message
 const termInput = document.getElementById('terminal-input');
 const termOutput = document.getElementById('terminal-output');
 
@@ -26,23 +26,19 @@ termInput.addEventListener('keydown', (e) => {
 
     const p = document.createElement('p');
     p.className = 'term-text';
-    p.innerHTML = `<span class="prompt">visitor@github:~$</span> ${cmd}`;
+    p.innerHTML = `<span class="prompt">adam@cyber-os:~$</span> ${cmd}`;
     termOutput.appendChild(p);
 
     let res = '';
-    if (cmd === 'help') {
-      res = 'Commands: <span class="cyan">about</span>, <span class="cyan">projects</span>, <span class="cyan">skills</span>, <span class="cyan">clear</span>';
-    } else if (cmd === 'about') {
-      res = 'Creative Web Developer building interactive frontend experiences.';
-    } else if (cmd === 'projects') {
-      res = '1. Pixel Art Studio | 2. Mastermind Quiz OS | 3. Hash Scanner';
-    } else if (cmd === 'skills') {
-      res = 'JavaScript (ES6+), HTML5, CSS3, Git, Node.js Basics';
+    if (cmd === 'about') {
+      res = 'Adam awad the developer of the app is very happy to be a customer in our web os';
+    } else if (cmd === 'help') {
+      res = 'Commands: <span class="cyan">about</span>, <span class="cyan">clear</span>';
     } else if (cmd === 'clear') {
       termOutput.innerHTML = '';
       return;
     } else if (cmd !== '') {
-      res = `Command not recognized: '${cmd}'. Type <span class="cyan">'help'</span>.`;
+      res = `Command not recognized: '${cmd}'. Type <span class="cyan">'about'</span> or <span class="cyan">'help'</span>.`;
     }
 
     if (res) {
@@ -56,111 +52,97 @@ termInput.addEventListener('keydown', (e) => {
   }
 });
 
-// Interactive Background Canvas Particles
+// Pixel Studio App Logic
+const pixelGrid = document.getElementById('pixel-grid');
+const pixelColor = document.getElementById('pixel-color');
+const eraserBtn = document.getElementById('eraser-btn');
+let isEraser = false;
+let isDrawing = false;
+
+function buildPixelGrid() {
+  pixelGrid.innerHTML = '';
+  for (let i = 0; i < 144; i++) {
+    const cell = document.createElement('div');
+    cell.classList.add('pixel-cell');
+    cell.addEventListener('mousedown', () => { isDrawing = true; paintCell(cell); });
+    cell.addEventListener('mouseenter', () => { if (isDrawing) paintCell(cell); });
+    cell.addEventListener('mouseup', () => { isDrawing = false; });
+    pixelGrid.appendChild(cell);
+  }
+}
+
+window.addEventListener('mouseup', () => { isDrawing = false; });
+
+function paintCell(cell) {
+  cell.style.backgroundColor = isEraser ? '#ffffff' : pixelColor.value;
+}
+
+function toggleEraser() {
+  isEraser = !isEraser;
+  eraserBtn.classList.toggle('active', isEraser);
+  eraserBtn.textContent = isEraser ? 'Eraser: ON' : 'Eraser: OFF';
+}
+
+function clearPixelGrid() {
+  document.querySelectorAll('.pixel-cell').forEach(c => c.style.backgroundColor = '#ffffff');
+}
+
+function exportPixelArt() {
+  const exportCanvas = document.createElement('canvas');
+  exportCanvas.width = 240;
+  exportCanvas.height = 240;
+  const ctx = exportCanvas.getContext('2d');
+
+  document.querySelectorAll('.pixel-cell').forEach((cell, idx) => {
+    const x = (idx % 12) * 20;
+    const y = Math.floor(idx / 12) * 20;
+    ctx.fillStyle = cell.style.backgroundColor || '#ffffff';
+    ctx.fillRect(x, y, 20, 20);
+  });
+
+  const link = document.createElement('a');
+  link.download = 'adam-pixel-art.png';
+  link.href = exportCanvas.toDataURL();
+  link.click();
+}
+
+buildPixelGrid();
+
+// Background Canvas Animation
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
-
 let particles = [];
-let particleCount = 80;
-let mouse = { x: null, y: null, radius: 120 };
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  initParticles();
+  particles = Array.from({ length: 60 }).map(() => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 1.5,
+    vy: (Math.random() - 0.5) * 1.5
+  }));
 }
 
-window.addEventListener('resize', resizeCanvas);
-window.addEventListener('mousemove', (e) => {
-  mouse.x = e.x;
-  mouse.y = e.y;
-});
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
-class Particle {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 2 + 1;
-    this.vx = (Math.random() - 0.5) * 1.5;
-    this.vy = (Math.random() - 0.5) * 1.5;
-  }
-
-  update() {
-    this.x += this.vx;
-    this.y += this.vy;
-
-    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-
-    // Mouse Interaction
-    let dx = mouse.x - this.x;
-    let dy = mouse.y - this.y;
-    let distance = Math.sqrt(dx * dx + dy * dy);
-    if (distance < mouse.radius) {
-      this.x -= (dx / distance) * 3;
-      this.y -= (dy / distance) * 3;
-    }
-  }
-
-  draw() {
     ctx.fillStyle = '#38bdf8';
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
     ctx.fill();
-  }
-}
-
-function initParticles() {
-  particles = [];
-  for (let i = 0; i < particleCount; i++) {
-    particles.push(new Particle());
-  }
-}
-
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw connecting lines
-  for (let a = 0; a < particles.length; a++) {
-    for (let b = a; b < particles.length; b++) {
-      let dx = particles[a].x - particles[b].x;
-      let dy = particles[a].y - particles[b].y;
-      let dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < 100) {
-        ctx.strokeStyle = `rgba(56, 189, 248, ${1 - dist / 100})`;
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.moveTo(particles[a].x, particles[a].y);
-        ctx.lineTo(particles[b].x, particles[b].y);
-        ctx.stroke();
-      }
-    }
-  }
-
-  particles.forEach(p => {
-    p.update();
-    p.draw();
   });
-
-  requestAnimationFrame(animateParticles);
+  requestAnimationFrame(animate);
 }
 
-document.getElementById('particle-slider').addEventListener('input', (e) => {
-  particleCount = parseInt(e.target.value);
-  initParticles();
-});
-
-document.getElementById('explode-btn').addEventListener('click', () => {
-  particles.forEach(p => {
-    p.vx = (Math.random() - 0.5) * 12;
-    p.vy = (Math.random() - 0.5) * 12;
-  });
-});
-
-// Start Canvas
 resizeCanvas();
-animateParticles();
+animate();
+window.addEventListener('resize', resizeCanvas);
 
-// Default Window open
+// Open Terminal by default
 openWindow('terminal-window');
